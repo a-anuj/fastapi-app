@@ -11,15 +11,17 @@ class Post(BaseModel):
     content : str
     rating : Optional[int] = None
 
+post_arr = [{"id":"1","title":"CSK","content":"5 trophies"},{"id":"2","title":"KKR","content":"3 trophies"}]
+
 @app.get("/")
 def root():
     return {"message":"Hello World"}
 
 @app.get("/posts")
 def posts():
-    return {"post":"Welcome to my page!"}
+    return {"data":post_arr}
 
-@app.post("/create/post")
+@app.post("/posts")
 def create_post(post:Post):
     post.dict()
     return {"data":post}

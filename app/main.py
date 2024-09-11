@@ -14,21 +14,18 @@ app = FastAPI()
 class Post(BaseModel):
     title : str
     content : str
-    rating : Optional[int] = None
+    published: bool = True
 
 while True:
     try:
         conn = psycopg2.connect(host="localhost",database="fastapi",user="postgres",
                                 password="anuj2006",cursor_factory=RealDictCursor)
         cursor = conn.cursor()
-        print("Database connected successfully!!")
         break
     except Exception as error:
-        print("Connecting to databse failed!")
+        print("Connection to database failed!")
         print("Error : ",error)
         time.sleep(2)
-
-
 
 
 post_arr = [{"id":1,"title":"CSK","content":"5 trophies"},{"id":2,"title":"KKR","content":"3 trophies"}]
@@ -55,10 +52,11 @@ def view_posts():
 
 @app.post("/posts", status_code=status.HTTP_201_CREATED)
 def create_post(post:Post):
-    post_dict = post.dict()
-    post_dict["id"] = randrange(1,1000000)
-    post_arr.append(post_dict)
-    return {"data":post_dict}
+    cursor.execute("""INSERT INTO posts(title,content,published) VALUES(%s,%s,%s) RETURNING * """,
+                   (post.title,post.content,post.published))
+    new_post = cursor.fetchone()
+    conn.commit()
+    return {"data":new_post}
 
 @app.get("/posts/{id}")
 def view_post(id: int):

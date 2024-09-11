@@ -68,18 +68,18 @@ def view_post(id: int):
 
 @app.delete("/posts/{id}")
 def delete_post(id: int):
-    index = get_post_index(id)
-    if index == None:
+    cursor.execute("""DELETE FROM posts where id=%s returning *""",(id,))
+    deleted_post = cursor.fetchone()
+    conn.commit()
+    if deleted_post is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="id not found")
-    post_arr.pop(index)
     return Response(status_code=status.HTTP_204_NO_CONTENT)
 
 @app.put("/posts/{id}")
 def update_post(id: int, post:Post):
-    index = get_post_index(id)
-    if index == None:
+    cursor.execute("""UPDATE posts SET title=%s,content=%s,published=%s WHERE id=%s returning *""",(post.title,post.content,post.published,id))
+    updated_post = cursor.fetchone()
+    conn.commit()
+    if updated_post is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="id not found")
-    post_dict = post.dict()
-    post_dict["id"] = id
-    post_arr[index] = post_dict
-    return {"message":"updated successfully"}
+    return {"data":updated_post}

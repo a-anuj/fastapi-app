@@ -60,7 +60,8 @@ def create_post(post:Post):
 
 @app.get("/posts/{id}")
 def view_post(id: int):
-    post = get_correct_post(id)
+    cursor.execute("""SELECT * FROM posts where id = %s""",(id,))
+    post = cursor.fetchone()
     if not post:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Path not found")
     return {"data":post}

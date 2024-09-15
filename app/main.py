@@ -5,6 +5,7 @@ import time
 from sqlalchemy.orm import Session
 from . import models,schemas
 from .database import engine, get_db
+from typing import List
 
 models.Base.metadata.create_all(bind=engine)
 app = FastAPI()
@@ -39,7 +40,7 @@ def root():
     return {"message":"Hello World"}
 
 
-@app.get("/posts")
+@app.get("/posts", response_model=List[schemas.PostResponse])
 def view_posts(db: Session = Depends(get_db)):
     posts = db.query(models.Post).all()
     return posts
@@ -56,7 +57,7 @@ def create_post(post:schemas.PostCreate, db: Session = Depends(get_db)):
     db.refresh(new_post)
     return new_post
 
-@app.get("/posts/{id}")
+@app.get("/posts/{id}", response_model=schemas.PostResponse)
 def view_post(id: int,db: Session = Depends(get_db) ):
     #cursor.execute("""SELECT * FROM posts where id = %s""",(id,))
     #post = cursor.fetchone()
@@ -80,7 +81,7 @@ def delete_post(id: int,db: Session = Depends(get_db) ):
     db.commit()
     return Response(status_code=status.HTTP_204_NO_CONTENT)
 
-@app.put("/posts/{id}")
+@app.put("/posts/{id}", response_model=schemas.PostResponse)
 def update_post(id: int, updated_post:schemas.PostCreate,db: Session = Depends(get_db)):
     #cursor.execute("""UPDATE posts SET title=%s,content=%s,published=%s WHERE id=%s returning *""",(post.title,post.content,post.published,id))
     #updated_post = cursor.fetchone()

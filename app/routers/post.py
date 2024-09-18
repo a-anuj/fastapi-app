@@ -4,14 +4,17 @@ from .. import models,schemas
 from ..database import get_db
 from typing import List
 
-router = APIRouter()
+router = APIRouter(
+    prefix = "/posts",
+    tags = ['Post']
+)
 
-@router.get("/posts", response_model=List[schemas.PostResponse])
+@router.get("/", response_model=List[schemas.PostResponse])
 def view_posts(db: Session = Depends(get_db)):
     posts = db.query(models.Post).all()
     return posts
 
-@router.post("/posts", status_code=status.HTTP_201_CREATED, response_model=schemas.PostResponse)
+@router.post("/", status_code=status.HTTP_201_CREATED, response_model=schemas.PostResponse)
 def create_post(post:schemas.PostCreate, db: Session = Depends(get_db)):
     #cursor.execute("""INSERT INTO posts(title,content,published) VALUES(%s,%s,%s) RETURNING * """,
     #               (post.title,post.content,post.published))
@@ -23,7 +26,7 @@ def create_post(post:schemas.PostCreate, db: Session = Depends(get_db)):
     db.refresh(new_post)
     return new_post
 
-@router.get("/posts/{id}", response_model=schemas.PostResponse)
+@router.get("/{id}", response_model=schemas.PostResponse)
 def view_post(id: int,db: Session = Depends(get_db) ):
     #cursor.execute("""SELECT * FROM posts where id = %s""",(id,))
     #post = cursor.fetchone()
@@ -32,7 +35,7 @@ def view_post(id: int,db: Session = Depends(get_db) ):
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Path not found")
     return post
 
-@router.delete("/posts/{id}")
+@router.delete("/{id}")
 def delete_post(id: int,db: Session = Depends(get_db) ):
     #cursor.execute("""DELETE FROM posts where id=%s returning *""",(id,))
     #deleted_post = cursor.fetchone()
@@ -47,7 +50,7 @@ def delete_post(id: int,db: Session = Depends(get_db) ):
     db.commit()
     return Response(status_code=status.HTTP_204_NO_CONTENT)
 
-@router.put("/posts/{id}", response_model=schemas.PostResponse)
+@router.put("/{id}", response_model=schemas.PostResponse)
 def update_post(id: int, updated_post:schemas.PostCreate,db: Session = Depends(get_db)):
     #cursor.execute("""UPDATE posts SET title=%s,content=%s,published=%s WHERE id=%s returning *""",(post.title,post.content,post.published,id))
     #updated_post = cursor.fetchone()

@@ -8,7 +8,7 @@ from sqlalchemy.util import deprecated
 from . import models,schemas, utils
 from .database import engine, get_db
 from typing import List
-from .routers import user, post
+from .routers import user, post, auth
 
 models.Base.metadata.create_all(bind=engine)
 app = FastAPI()
@@ -40,6 +40,7 @@ def get_post_index(id):
 
 app.include_router(post.router)
 app.include_router(user.router)
+app.include_router(auth.router)
 
 @app.get("/")
 def root():

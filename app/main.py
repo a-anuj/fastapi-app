@@ -5,7 +5,7 @@ import time
 
 from sqlalchemy.orm import Session
 from sqlalchemy.util import deprecated
-from . import models,schemas, utils
+from . import models,schemas, utils, oauth2
 from .database import engine, get_db
 from typing import List
 from .routers import user, post, auth

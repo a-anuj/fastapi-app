@@ -1,5 +1,7 @@
 import pytest
 from app import models
+from tests.conftest import authorized_client
+
 
 @pytest.fixture()
 def test_vote(test_posts,session,test_user):
@@ -25,5 +27,8 @@ def test_delete_vote_not_exist(authorized_client,test_posts,test_user):
 
 def test_vote_post_not_exist(authorized_client,test_posts,test_user,test_vote):
     response = authorized_client.post("/vote/",json={"post_id":98989,"dir":1})
-    assert response.status_code == 404 
+    assert response.status_code == 404
 
+def test_vote_unauthorized_user(client,test_user,test_posts,test_vote):
+    response = client.post("/vote/",json={"post_id":test_posts[3].id,"dir":1})
+    assert response.status_code == 401

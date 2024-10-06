@@ -18,3 +18,7 @@ def test_vote_twice_post(authorized_client,test_posts,test_vote):
 def test_delete_vote(authorized_client,test_posts,test_user,test_vote):
     response = authorized_client.post("/vote/",json={"post_id":test_posts[3].id,"dir":0})
     assert response.status_code == 201
+
+def test_delete_vote_not_exist(authorized_client,test_posts,test_user):
+    response = authorized_client.post("/vote/",json={"post_id":test_posts[3].id,"dir":0})
+    assert response.status_code == 404

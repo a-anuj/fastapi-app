@@ -60,3 +60,16 @@ def test_unauthorized_user_create_post(client,test_user,test_posts):
     response = client.post("/posts/",json={"title":"fun","content":"funcontent"})
     assert response.status_code == 401
 
+def test_unauthorized_user_delete_post(client,test_user,test_posts):
+    response = client.delete(f"/posts/{test_posts[0].id}")
+    assert response.status_code == 401
+
+def test_delete_post_success(authorized_client,test_posts,test_user):
+    response = authorized_client.delete(f"/posts/{test_posts[0].id}")
+    assert response.status_code == 204
+
+def test_delete_post_not_exist(authorized_client,test_posts,test_user):
+    response = authorized_client.delete(f"/posts/9009")
+    assert response.status_code == 404
+
+

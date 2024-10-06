@@ -20,7 +20,8 @@ This is a **FastAPI** app that shows how to build web applications quickly and e
 - **SQLAlchemy**: For database interactions if you're working with relational databases.
 - **PostgreSQL**: Working with database
 - **Swagger UI / ReDoc**: For auto-generated API documentation
-**Alembic**: A database migration tool often used with SQLAlchemy
+
+- **Alembic**: A database migration tool often used with SQLAlchemy
 
 
 ## Installation

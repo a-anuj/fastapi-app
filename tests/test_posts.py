@@ -72,4 +72,7 @@ def test_delete_post_not_exist(authorized_client,test_posts,test_user):
     response = authorized_client.delete(f"/posts/9009")
     assert response.status_code == 404
 
+def test_delete_other_user_post(authorized_client,test_posts,test_user):
+    response = authorized_client.delete(f"/posts/{test_posts[3].id}")
+    assert response.status_code == 403
 

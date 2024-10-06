@@ -75,7 +75,7 @@ FastAPI automatically generates interactive API documentation that you can acces
 - Swagger UI: http://127.0.0.1:8000/docs
 - ReDoc: http://127.0.0.1:8000/redoc <br>
 
-You can use these interfaces to explore the API endpoints, see request and response formats, and test them directly from your browser.
+You can use these interfaces to explore the API endpoints, see request and response formats, and test them directly from your browser. 
 
 ### Example Documentation
 ![Documention](images/fastapi-swagger.png)

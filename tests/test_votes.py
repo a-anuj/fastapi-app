@@ -22,3 +22,8 @@ def test_delete_vote(authorized_client,test_posts,test_user,test_vote):
 def test_delete_vote_not_exist(authorized_client,test_posts,test_user):
     response = authorized_client.post("/vote/",json={"post_id":test_posts[3].id,"dir":0})
     assert response.status_code == 404
+
+def test_vote_post_not_exist(authorized_client,test_posts,test_user,test_vote):
+    response = authorized_client.post("/vote/",json={"post_id":98989,"dir":1})
+    assert response.status_code == 404 
+
